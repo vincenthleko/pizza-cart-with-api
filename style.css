@@ -1,0 +1,76 @@
+.pizza {
+  border: 1px solid;
+  margin-bottom: 1em;
+  padding: 1em;
+  border-radius: 1em;
+  background-image: url("images/pizza slice2.jpeg");
+  color: white;
+}
+
+.pizzas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 60px; /* space between grid items */
+  padding: 50px;
+}
+
+table {
+  table {
+    border-collapse: collapse; /* Combines adjacent borders */
+    width: 100%; /* Full width of its container */
+  }
+
+  th,
+  td {
+    border: 1px solid black;
+    padding: 8px; /* Adds some padding inside cells */
+    text-align: left; /* Aligns text to the left */
+  }
+}
+[x-cloak] {
+  display: none !important;
+}
+
+body {
+  background-image: url("images/pizza bg2.jpg");
+  background-size: cover;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+}
+
+.cart button {
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.cart button:hover {
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: bolder;
+  background-color: aqua;
+}
+
+.logging button {
+  border-radius: 0.5em;
+    cursor: pointer;
+    font-weight: bolder;  
+}
+
+.logging button:hover {
+  border-radius: 0.5em;
+    cursor: pointer;
+    font-weight: bolder;
+    background-color: aqua;  
+}
+.pizzas button {
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: bolder;
+}
+.pizzas button:hover {
+  border-radius: 0.5em;
+  cursor: pointer;
+  font-weight: bolder;
+  background-color: aqua;
+}

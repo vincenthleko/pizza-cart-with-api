@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="pizza.js"></script>
+  </head>
+  <body x-data="pizzaCart">
+    <div class="cointainer">
+      <h1>Welcome to V's pizza hub</h1>
+       
+      <div class="cart" x-cloak>
+        <div>
+          Username: <input type="text" x-model="username">
+          <button @click="login" x-show="!cartId" class="logging">Login</button>
+          <button @click="logout" x-show="username && cartId" class="logging">Logout</button>
+        </div>
+        <div x-show="cartId">
+          Cart code: <span x-text="cartId"></span>
+        </div>
+        <div  x-show="cartTotal > 0">
+          <h2>Your cart</h2>
+          <div x-text="message" class="message">message here</div>
+          <div x-show="change" x-text="'change: R' + change.toFixed(2)"></div>
+          <table>
+            <tr>
+              <th>Flavour</th>
+              <th>Size</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+
+            <template x-for="pizza in cartPizzas">
+              <tr>
+                <td x-text="pizza.flavour"></td>
+                <td x-text="pizza.size"></td>
+                <td x-text="pizza.price"></td>
+                <td>
+                  <button @click="addPizzaToCart(pizza.id)" class="logging">+</button>
+                  x<span x-text="pizza.qty">0</span>
+                  <button @click="removePizzaFromCart(pizza.id)" class="logging">-</button>
+                </td>
+                <td x-text="pizza.total"></td>
+              </tr>
+            </template>
+
+            <tr>
+              <td colspan="3">Total</td>
+              <td colspan="2" style="text-align: right;">R <span x-text="cartTotal"></span></td>
+            </tr>
+            <tr>
+              <td colspan="3">Pay</td>
+              <td>
+                <input x-model="paymentAmount" type="text">
+              </td>
+              <td><button @click="payForCart()" class="logging">Pay</button></td>
+            </tr>
+          </table>
+
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h2 x-show="username && cartId">Menu</h2>
+    <div class="pizzas" x-show="username && cartId">
+      
+      <template x-for="pizza in pizzas" :key="pizza.id">
+        <div class="pizza">
+          <h5 x-text="pizza.flavour"></h5>
+          <span x-text="pizza.size"></span>
+          <strong>
+            <span x-text="pizza.price"></span>
+          </strong>
+          <div>
+            <button class="btn" @click="addPizzaToCart(pizza.id)">Add to cart</button>
+          </div>
+        </div>
+      </template>
+
+    </div>
+    
+  </body>
+</html>
