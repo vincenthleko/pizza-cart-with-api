@@ -43,7 +43,7 @@
               <tr>
                 <td x-text="pizza.flavour"></td>
                 <td x-text="pizza.size"></td>
-                <td x-text="pizza.price"></td>
+                <td x-text="pizza.price.toFixed(2)"></td>
                 <td>
                   <button @click="addPizzaToCart(pizza.id)" class="logging">+</button>
                   x<span x-text="pizza.qty">0</span>
