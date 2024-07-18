@@ -90,7 +90,12 @@ document.addEventListener("alpine:init", () => {
         this.getCart().then((result) => {
           this.cartPizzas = result.data.pizzas;
           const cartData = result.data;
-          this.cartPizzas = cartData.pizzas;
+          this.cartPizzas = cartData.pizzas.map(p => {
+            return {
+              ...p,
+              total: p.total.toFixed(2)
+            }
+          })
           this.cartTotal = cartData.total.toFixed(2);
         });
       },
