@@ -18,18 +18,21 @@
       <h1>Welcome to V's pizza hub</h1>
        
       <div class="cart" x-cloak>
-        <div>
+        <div class="username">
           Username: <input type="text" x-model="username">
           <button @click="login" x-show="!cartId" class="logging">Login</button>
           <button @click="logout" x-show="username && cartId" class="logging">Logout</button>
         </div>
-        <div x-show="cartId">
+        <div x-show="cartId" class="username">
           Cart code: <span x-text="cartId"></span>
         </div>
-        <div  x-show="cartTotal > 0">
+        <div  x-show="cartTotal > 0" class="username">
           <h2>Your cart</h2>
           <div x-text="message" class="message">message here</div>
           <div x-show="change" x-text="'change: R' + change.toFixed(2)"></div>
+          <div>
+          </div>
+          
           <table>
             <tr>
               <th>Flavour</th>
@@ -72,36 +75,36 @@
       </div>
     </div>
 
-    <h2 x-show="username && cartId">Menu</h2>
+    <h2 x-show="username && cartId" style="text-align: center;">Menu</h2>
     <div class="pizzas" x-show="username && cartId">
       
       <template x-for="pizza in pizzas" :key="pizza.id">
         <div class="pizza">
           <h5 x-text="pizza.flavour"></h5>
-          <span x-text="pizza.size"></span>
+          <span x-text="pizza.size" style="background-color: black;"></span>
           <strong>
-            <span x-text="pizza.price"></span>
+            <span x-text="pizza.price" style="background-color: black;"></span>
           </strong>
           <div>
-            <button class="btn" @click="addPizzaToCart(pizza.id)">Add to cart</button>
+            <button class="btn" @click="addPizzaToCart(pizza.id)">Buy</button>
           </div>
         </div>
       </template>
 
     </div>
-    <!-- <footer class="footer">
-      <div class="address">
+    <div x-show="username && cartId" style="margin-bottom: 0%; background-color: #563F1B !important; padding-bottom: 150px;" x-cloak>
+      <div class="address" style="padding-left: 15px;">
         <p>Address:</p>
         <p>06 Collins Street</p>
         <p>Brixton</p>
       </div>
-      <div class="socials">
+      <div class="socials" style="padding-right: 15px;">
         <p>Social media platform:</p>
         <p>Facebook @ V's pizza hub</p>
         <p>Instagram @ V's_pizza_hub</p>
         <p>X @ V's pizza hub</p>
       </div>
-    </footer> -->
+    </div>
     
   </body>
 </html>

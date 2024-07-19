@@ -9,7 +9,7 @@
 
 .pizzas {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 60px; /* space between grid items */
   padding: 50px;
 }
@@ -39,9 +39,7 @@
     font-weight: bold;
     text-align: left;
   }
-  footer {
-    background-color: #563F1B;
-  }
+  
 }
 
 [x-cloak] {
@@ -97,15 +95,8 @@ body {
 .socials {
   float: inline-end;
 }
-/* .footer {
-  background-color: #563F1B;
-  color: white;           
-  padding: 20px;
+h1 {
   text-align: center;
-  position: relative;
-  bottom: 0;
-  width: 100%;
-} */
-.footer .address, .footer .socials {
-  margin-bottom: 0px;
 }
+
+
