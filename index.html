@@ -75,6 +75,26 @@
       </div>
     </div>
 
+    <div class="featured-pizzas">
+      <h2 x-show="featuredPizzas" style="text-align: center;">Featured Pizzas</h2>
+      <div class="pizza-list">
+        <template x-for="pizza in featuredPizzas" :key="pizza.id">
+          <div class="pizza-item">
+            <div class="pizza">
+           <h5 x-text="pizza.flavour" style="background-color: black;"></h5>
+           <span x-text="pizza.size" style="background-color: black;"></span>
+           <strong>
+            <span x-text="pizza.price" style="background-color: black;"></span>
+           </strong>
+           <div>
+             <button class="btn" @click="addPizzaToCart(pizza.id)">Buy</button>
+           </div>
+          </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
     <h2 x-show="username && cartId" style="text-align: center;">Menu</h2>
     <div class="pizzas" x-show="username && cartId">
       
@@ -87,6 +107,8 @@
           </strong>
           <div>
             <button class="btn" @click="addPizzaToCart(pizza.id)">Buy</button>
+            <button @click="manageFeaturedPizza(pizza.id)">Feature Pizza</button>
+
           </div>
         </div>
       </template>

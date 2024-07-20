@@ -3,6 +3,7 @@ document.addEventListener("alpine:init", () => {
     return {
       title: "Pizza Cart API",
       pizzas: [],
+      featuredPizzas: [],
       username: "",
       cartId: "",
       cartPizzas: [],
@@ -86,6 +87,24 @@ document.addEventListener("alpine:init", () => {
         );
       },
 
+      fetchFeaturedPizzas() {
+        const featuredPizzasURL = `https://pizza-api.projectcodex.net/api/pizzas/featured?username=${this.username}`;
+        return axios.get(featuredPizzasURL).then((result) => {
+          this.featuredPizzas = result.data.pizzas;
+        });
+      },
+
+      manageFeaturedPizza(pizzaId) {
+        const featuredPizzasURL = `https://pizza-api.projectcodex.net/api/pizzas/featured`;
+        axios.post(featuredPizzasURL, {
+          "username": this.username,
+          "pizza_id": pizzaId
+        }).then(() => {
+          this.fetchFeaturedPizzas();
+        });
+      },
+
+
       showCartData() {
         this.getCart().then((result) => {
           this.cartPizzas = result.data.pizzas;
@@ -120,9 +139,9 @@ document.addEventListener("alpine:init", () => {
               .createCart()
               .then(() => {
                   this.showCartData();
-              })
+              });
             }
-        
+            this.fetchFeaturedPizzas();
       },
 
       addPizzaToCart(pizzaId) {
@@ -169,6 +188,7 @@ document.addEventListener("alpine:init", () => {
               this.message = '';
               this.change = 0;
               this.cartPizzas = [];
+              this.featuredPizzas = [];
               this.cartTotal = 0.0;
               this.cartId = '';
               this.paymentAmount = '';

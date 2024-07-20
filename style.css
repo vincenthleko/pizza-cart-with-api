@@ -10,8 +10,9 @@
 .pizzas {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 60px; /* space between grid items */
+  gap: 60px; 
   padding: 50px;
+  text-align: center;
 }
 
 @media (max-width: 600px) {
@@ -78,12 +79,12 @@ body {
   font-weight: bolder;
   background-color: aqua;
 }
-.pizzas button {
+.pizzas button, .pizza button {
   border-radius: 0.5em;
   cursor: pointer;
   font-weight: bolder;
 }
-.pizzas button:hover {
+.pizzas button:hover, .pizza button:hover {
   border-radius: 0.5em;
   cursor: pointer;
   font-weight: bolder;
@@ -97,6 +98,23 @@ body {
 }
 h1 {
   text-align: center;
+}
+.pizza-list {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 50px;
+  margin-left: 50px;
+  
+}
+
+.pizza-item {
+  flex: 1 1 calc(33.333% - 32px);
+  box-sizing: border-box;
+  padding: 20px; 
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.2em; 
+  
 }
 
 
