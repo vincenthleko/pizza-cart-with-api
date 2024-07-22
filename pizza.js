@@ -12,6 +12,8 @@ document.addEventListener("alpine:init", () => {
       paymentAmount: '',
       message: "",
       change: 0,
+      historicalOrders: [],
+      cartData: {},
       // paymentEntered: false,
       login() {
         if (this.username.length > 2) {
@@ -25,13 +27,14 @@ document.addEventListener("alpine:init", () => {
       logout() {
         if (confirm('Do you want to logout?')) {
           this.username = '';
+          this.featuredPizzas = [];
           this.cartId = '';
-          localStorage['cartId'] = '';
-          localStorage['username'] = '';
-
+          localStorage.clear();
+      
         }
 
       },
+
       createCart() {
         if (!this.username) {
           return Promise.resolve();
@@ -41,6 +44,7 @@ document.addEventListener("alpine:init", () => {
 
         if (cartId) {
           this.cartId = cartId;
+          this.showCartData();
           return Promise.resolve();
         } else {
           const createCartURL = `https://pizza-api.projectcodex.net/api/pizza-cart/create?username=${this.username}`;
@@ -48,7 +52,7 @@ document.addEventListener("alpine:init", () => {
             this.cartId = result.data.cart_code;
             localStorage["cartId"] = this.cartId;
           });
-        }
+        } 
       
       },
 
@@ -104,11 +108,11 @@ document.addEventListener("alpine:init", () => {
         });
       },
 
-
       showCartData() {
         this.getCart().then((result) => {
           this.cartPizzas = result.data.pizzas;
           const cartData = result.data;
+          this.cartData = cartData;
           this.cartPizzas = cartData.pizzas.map(p => {
             return {
               ...p,
@@ -117,6 +121,15 @@ document.addEventListener("alpine:init", () => {
           })
           this.cartTotal = cartData.total.toFixed(2);
         });
+      },
+
+      fetchHistoricalOrders() {
+        this.historicalOrders = JSON.parse(localStorage.getItem('historicalOrders') || []);
+        console.log(this.historicalOrders, 'u');
+        // const historicalOrdersURL = `https://pizza-api.projectcodex.net/api/pizza-cart/${this.username}/:username`;
+        // axios.get(historicalOrdersURL).then((result) => {
+        //   this.historicalOrders = result.data.orders;
+        // });
       },
 
       init() {
@@ -163,13 +176,6 @@ document.addEventListener("alpine:init", () => {
         });
       },
 
-      
-      //   } else {
-      //     this.paymentEntered = false;
-      //     this.showCheckout = false;
-      //     alert("Sorry - that is not enough money!");
-      //   }
-      // },
 
       payForCart() {
         // alert("pay now: " + this.paymentAmount)
@@ -179,6 +185,8 @@ document.addEventListener("alpine:init", () => {
             setTimeout(() => (this.message = ""), 3000);
           } else {
             this.message = "Payment received!";
+            this.historicalOrders.push(this.cartData)
+            localStorage.setItem('historicalOrders', JSON.stringify(this.historicalOrders))
             if (this.paymentAmount >= this.cartTotal) {
               this.change = this.paymentAmount - this.cartTotal;
             } else {
