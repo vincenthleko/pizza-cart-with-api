@@ -117,7 +117,7 @@
     </div>
 
     <div class="featured-pizzas">
-      <h2 x-show="featuredPizzas[]" style="text-align: center;">Featured Pizzas</h2>
+      <h2 x-show="featuredPizzas" style="text-align: center;">Featured Pizzas</h2>
       <div class="pizza-list">
         <template x-for="pizza in featuredPizzas" :key="pizza.id">
           <div class="pizza-item">

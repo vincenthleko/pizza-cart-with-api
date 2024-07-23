@@ -196,7 +196,7 @@ document.addEventListener("alpine:init", () => {
               this.message = '';
               this.change = 0;
               this.cartPizzas = [];
-              this.featuredPizzas = [];
+              
               this.cartTotal = 0.0;
               this.cartId = '';
               this.paymentAmount = '';
