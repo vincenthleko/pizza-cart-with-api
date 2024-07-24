@@ -9,30 +9,53 @@ document.addEventListener("alpine:init", () => {
       cartPizzas: [],
       cartTotal: 0.0,
       pizzaId: 0,
-      paymentAmount: '',
+      paymentAmount: "",
       message: "",
+      messageStatus: "",
       change: 0,
       historicalOrders: [],
       cartData: {},
-      // paymentEntered: false,
+      pizzas: [],
+      
       login() {
         if (this.username.length > 2) {
-          localStorage['username'] = this.username;
-          this.createCart();
+          localStorage["username"] = this.username;
+          this.createCart().then(() => {
+            this.fetchHistoryCart();
+            this.showCartData();
+          });
         } else {
           alert("Username too short!");
         }
       },
 
       logout() {
-        if (confirm('Do you want to logout?')) {
-          this.username = '';
+        if (confirm("Do you want to logout?")) {
+          this.username = "";
           this.featuredPizzas = [];
-          this.cartId = '';
+          this.cartId = "";
           localStorage.clear();
-      
         }
+      },
 
+      fetchHistoryCart() {
+        axios
+        .get(`https://pizza-api.projectcodex.net/api/pizza-cart/username/${this.username}`)
+        .then ((res) => {
+          const carts = res.data;
+          carts.forEach((cart) => {
+            if (cart.status === 'paid') {
+              const cartCode = cart.cart_code;
+              axios
+              .get(`https://pizza-api.projectcodex.net/api/pizza-cart/${cartCode}/get`)
+              .then((res) => {
+                const cartData = res.data;
+                this.historicalOrders.push(cartData);
+               
+              });
+            }
+          });
+        });
       },
 
       createCart() {
@@ -40,7 +63,7 @@ document.addEventListener("alpine:init", () => {
           return Promise.resolve();
         }
         const cartId = localStorage["cartId"];
-        console.log(cartId)
+        // console.log(cartId);
 
         if (cartId) {
           this.cartId = cartId;
@@ -52,8 +75,7 @@ document.addEventListener("alpine:init", () => {
             this.cartId = result.data.cart_code;
             localStorage["cartId"] = this.cartId;
           });
-        } 
-      
+        }
       },
 
       getCart() {
@@ -65,27 +87,29 @@ document.addEventListener("alpine:init", () => {
         return axios.post(
           `https://pizza-api.projectcodex.net/api/pizza-cart/add`,
           {
-            "cart_code" : this.cartId,
-            "pizza_id" : pizzaId,
+            cart_code: this.cartId,
+            pizza_id: pizzaId,
           }
         );
+        
       },
 
       removePizza(pizzaId) {
         return axios.post(
           `https://pizza-api.projectcodex.net/api/pizza-cart/remove`,
           {
-            "cart_code" : this.cartId,
-            "pizza_id" : pizzaId,
+            cart_code: this.cartId,
+            pizza_id: pizzaId,
           }
         );
+       
       },
 
       pay(amount) {
         return axios.post(
           `https://pizza-api.projectcodex.net/api/pizza-cart/pay`,
           {
-            "cart_code" : this.cartId,
+            cart_code: this.cartId,
             amount,
           }
         );
@@ -94,18 +118,20 @@ document.addEventListener("alpine:init", () => {
       fetchFeaturedPizzas() {
         const featuredPizzasURL = `https://pizza-api.projectcodex.net/api/pizzas/featured?username=${this.username}`;
         return axios.get(featuredPizzasURL).then((result) => {
-          this.featuredPizzas = result.data.pizzas;
+          this.featuredPizzas = result.data.pizzas || [];
         });
       },
 
       manageFeaturedPizza(pizzaId) {
         const featuredPizzasURL = `https://pizza-api.projectcodex.net/api/pizzas/featured`;
-        axios.post(featuredPizzasURL, {
-          "username": this.username,
-          "pizza_id": pizzaId
-        }).then(() => {
-          this.fetchFeaturedPizzas();
-        });
+        axios
+          .post(featuredPizzasURL, {
+            username: this.username,
+            pizza_id: pizzaId,
+          })
+          .then(() => {
+            this.fetchFeaturedPizzas() || [];
+          });
       },
 
       showCartData() {
@@ -113,98 +139,89 @@ document.addEventListener("alpine:init", () => {
           this.cartPizzas = result.data.pizzas;
           const cartData = result.data;
           this.cartData = cartData;
-          this.cartPizzas = cartData.pizzas.map(p => {
+          this.cartPizzas = cartData.pizzas.map((p) => {
             return {
               ...p,
-              total: p.total.toFixed(2)
-            }
-          })
+              total: p.total.toFixed(2),
+            };
+          });
           this.cartTotal = cartData.total.toFixed(2);
+          // this.saveCartData();
         });
       },
 
-      fetchHistoricalOrders() {
-        this.historicalOrders = JSON.parse(localStorage.getItem('historicalOrders') || []);
-        console.log(this.historicalOrders, 'u');
-        // const historicalOrdersURL = `https://pizza-api.projectcodex.net/api/pizza-cart/${this.username}/:username`;
-        // axios.get(historicalOrdersURL).then((result) => {
-        //   this.historicalOrders = result.data.orders;
-        // });
-      },
-
+      
+      
       init() {
-
-        const storedUsername = localStorage['username'];
+        const storedUsername = localStorage["username"];
         if (storedUsername) {
           this.username = storedUsername;
+      
         }
 
         axios
           .get(`https://pizza-api.projectcodex.net/api/pizzas`)
           .then((result) => {
-            // console.log(result.data);
-            this.pizzas = result.data.pizzas
-            // this.pizzaId = result.data.pizzas.id;
+            this.pizzas = result.data.pizzas;
           });
 
         if (!this.cartId) {
-           this
-              .createCart()
-              .then(() => {
-                  this.showCartData();
-              });
-            }
-            this.fetchFeaturedPizzas();
+          this.createCart().then(() => {
+            this.showCartData();
+          });
+        }
+        this.fetchFeaturedPizzas();
+        this.fetchHistoryCart();
+        this.fetchHistoricalOrders();
+      
       },
 
       addPizzaToCart(pizzaId) {
-        // alert(pizzaId)
         this.addPizza(parseInt(pizzaId))
           .then(() => {
-            // alert("inside add Pizza");
             this.showCartData();
           })
           .then(() => {
             this.showCartData();
           });
-        // console.log(parseInt(pizzaId))
       },
       removePizzaFromCart(pizzaId) {
-        // alert(pizzaId)
         this.removePizza(pizzaId).then(() => {
           this.showCartData();
         });
       },
 
-
       payForCart() {
-        // alert("pay now: " + this.paymentAmount)
         this.pay(this.paymentAmount).then((result) => {
           if (result.data.status == "failure") {
             this.message = result.data.message;
+            this.messageStatus = "failure";
+
             setTimeout(() => (this.message = ""), 3000);
           } else {
             this.message = "Payment received!";
-            this.historicalOrders.push(this.cartData)
-            localStorage.setItem('historicalOrders', JSON.stringify(this.historicalOrders))
+            // this.messageStatus = "success"; 
             if (this.paymentAmount >= this.cartTotal) {
               this.change = this.paymentAmount - this.cartTotal;
             } else {
               this.change = 0;
             }
             setTimeout(() => {
-              this.message = '';
+              this.message = "";
               this.change = 0;
               this.cartPizzas = [];
-              
               this.cartTotal = 0.0;
-              this.cartId = '';
-              this.paymentAmount = '';
-              localStorage["cartId"] = '';
+              this.cartId = "";
+              this.paymentAmount = "";
+              localStorage["cartId"] = "";
               this.createCart();
-              // this.username = '';
             }, 3000);
           }
+          this.historicalOrders.push(this.cartData);
+          localStorage.setItem(
+            "historicalOrders",
+            JSON.stringify(this.historicalOrders)
+          );
         });
       },
     };

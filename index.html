@@ -17,7 +17,7 @@
     <div class="cointainer">
           <div class="header">
             <div class="login-container">
-              <div class="username">
+              <div x-cloak class="username">
                 Username: <input type="text" x-model="username">
                 <button @click="login" x-show="!cartId" class="logging">Login</button>
                 <button @click="logout" x-show="username && cartId" class="logging">Logout</button>
@@ -26,11 +26,11 @@
                 <button @click="open = !open">Orders & Account</button>
                 <div class="dropdown-content" x-show="open" @click.outside="open = false">
                   <div>
-                    <button @click="fetchHistoricalOrders()">Show Historical Orders</button>
+                    <button @click="fetchHistoricalcart()">Show Historical Orders</button>
                     <div>
                       <template x-if="historicalOrders.length > 0">
                         <div>
-                          <template x-for="order in historicalOrders" :key="order.id">
+                          <template x-for="order in historicalOrders" :key="order.cart_code">
                             <div>
                               <h3>Order ID: <span x-text="order.id"></span></h3>
                               <p>Total: R<span x-text="order.total.toFixed(2)"></span></p>
@@ -53,23 +53,24 @@
                       Username: <input type="text" x-model="username">
                       <button @click="login" x-show="!cartId" class="logging">Login</button>
                       <button @click="logout" x-show="username && cartId" class="logging">Logout</button>
-                    </div>
+                    </div> -->
                     <div x-show="cartId">
                       Cart code: <span x-text="cartId"></span>
-                    </div> -->
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
       <div class="welcome">
-        <h1 x-show="cartId && username">Welcome to V's pizza hub</h1>
+        <h1 x-cloak x-show="cartId && username">Welcome to V's pizza hub</h1>
       </div>
 
       <div class="cart" x-cloak>
         <div  x-show="cartTotal > 0">
           <h2>Your cart</h2>
-          <div x-text="message" class="message">message here</div>
+          <div x-text="message" :class="message.includes('Payment received!') ? 'success-message' : 'error-message'" class="message">message here</div>
+
           <div x-show="change" x-text="'change: R' + change.toFixed(2)"></div>
           <div>
           </div>
@@ -117,7 +118,7 @@
     </div>
 
     <div class="featured-pizzas">
-      <h2 x-show="featuredPizzas" style="text-align: center;">Featured Pizzas</h2>
+      <h2 x-cloak x-show="featuredPizzas.length > 0" style="text-align: center;">Featured Pizzas</h2>
       <div class="pizza-list">
         <template x-for="pizza in featuredPizzas" :key="pizza.id">
           <div class="pizza-item">
@@ -136,7 +137,7 @@
       </div>
     </div>
 
-    <h2 x-show="username && cartId" style="text-align: center;">Menu</h2>
+    <h2 x-cloak x-show="username && cartId" style="text-align: center;">Menu</h2>
     <div class="pizzas" x-show="username && cartId">
       
       <template x-for="pizza in pizzas" :key="pizza.id">
