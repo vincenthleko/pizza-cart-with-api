@@ -196,16 +196,30 @@ document.addEventListener("alpine:init", () => {
           if (result.data.status == "failure") {
             this.message = result.data.message;
             this.messageStatus = "failure";
+            c
 
             setTimeout(() => (this.message = ""), 3000);
           } else {
             this.message = "Payment received!";
-            // this.messageStatus = "success"; 
-            if (this.paymentAmount >= this.cartTotal) {
-              this.change = this.paymentAmount - this.cartTotal;
+            this.messageStatus = "success"; 
+           
+            
+                // Convert to float for accurate arithmetic operations
+                let paymentAmount = parseFloat(this.paymentAmount);
+                let cartTotal = parseFloat(this.cartTotal);
+
+                // console.log("Payment amount:", paymentAmount, "Type:", typeof paymentAmount);
+                // console.log("Cart total:", cartTotal, "Type:", typeof cartTotal);
+            
+
+            if (parseFloat(this.paymentAmount) >= parseFloat(this.cartTotal)) {
+              this.change = parseFloat(((this.paymentAmount) - parseFloat(this.cartTotal)).toFixed(2));
+              // console.log("Change calculated:", this.change);
             } else {
               this.change = 0;
+              // console.log("No change needed.");
             }
+            
             setTimeout(() => {
               this.message = "";
               this.change = 0;
@@ -216,7 +230,10 @@ document.addEventListener("alpine:init", () => {
               localStorage["cartId"] = "";
               this.createCart();
             }, 3000);
-          }
+          };
+
+        
+
           this.historicalOrders.push(this.cartData);
           localStorage.setItem(
             "historicalOrders",
