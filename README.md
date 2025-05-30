@@ -25,7 +25,7 @@ The app communicates with a backend API that manages pizza data, pricing logic, 
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/pizza-cart-with-api.git
+git clone https://github.com/vincenthleko/pizza-cart-with-api.git
 cd pizza-cart-with-api
 npm install
 npm start
